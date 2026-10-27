@@ -9,8 +9,9 @@ export default defineConfig({
             input: ['resources/css/app.css', 'resources/js/app.js'],
             refresh: true,
             fonts: [
-                bunny('Instrument Sans', {
-                    weights: [400, 500, 600],
+                // Mengganti Instrument Sans ke Poppins
+                bunny('Poppins', {
+                    weights: [300, 400, 500, 600, 700],
                 }),
             ],
         }),
