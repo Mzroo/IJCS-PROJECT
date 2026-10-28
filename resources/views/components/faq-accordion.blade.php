@@ -3,9 +3,6 @@
         
         <!-- HEADER SECTION -->
         <div class="text-center max-w-2xl mx-auto mb-12">
-            <span class="bg-sky-100 text-sky-700 font-bold text-xs px-3.5 py-1.5 rounded-full uppercase tracking-wider border border-sky-200/60 inline-block">
-                Pertanyaan Umum
-            </span>
             <h2 class="text-3xl sm:text-4xl font-black text-gray-900 tracking-tight mt-3">
                 Sering Ditanyakan
             </h2>

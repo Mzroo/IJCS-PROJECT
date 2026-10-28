@@ -1,5 +1,5 @@
 <header x-data="{ open: false }" class="sticky top-0 z-50">
-    <!-- 1. TOPBAR INFORMASI (Desain Tanpa Background Kotak di Jam Buka) -->
+    <!-- 1. TOPBAR INFORMASI -->
     <div class="hidden md:block bg-sky-600 text-sky-100 text-xs font-medium border-b border-sky-400/30 py-2">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
             
@@ -16,32 +16,32 @@
                 </span>
             </div>
 
-            <!-- SEBELAH KANAN: Jam Operasional (Clean Text Tanpa Background) -->
+            <!-- SEBELAH KANAN: Jam Operasional -->
             <div class="flex items-center gap-2">
                 <span class="font-bold text-white">Buka Hari Ini:</span>
-                <span class="text-sky-100">Senin - Sabtu (08.00 - 17.00 WIB)</span>
+                <span class="text-sky-100">Senin - Sabtu (08.00 - 20.00 WIB)</span>
             </div>
 
         </div>
     </div>
 
-    <!-- 2. NAVBAR UTAMA (GRADIEN BIRU LANGIT / SKY BLUE) -->
+    <!-- 2. NAVBAR UTAMA (GRADIEN BIRU SKY BLUE AWAL) -->
     <nav class="bg-gradient-to-r from-sky-400 via-sky-500 to-blue-500 text-white shadow-md transition-all">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
                 
                 <!-- BRAND LOGO -->
                 <a href="{{ url('/') }}" class="flex items-center space-x-3 group">
-                    <div class="w-10 h-10 bg-white/20 backdrop-blur-md text-white rounded-xl flex items-center justify-center text-xl group-hover:scale-105 transition border border-white/30 shadow-inner">
+                    <div class="w-10 h-10 bg-white/20 backdrop-blur-md text-white rounded-xl flex items-center justify-center text-xl group-hover:scale-105 transition border border-white/30 shadow-inner shrink-0">
                         <i class="fa-solid fa-laptop-medical"></i>
                     </div>
                     <div>
                         <span class="text-xl font-black tracking-wider block leading-none drop-shadow-sm">IJCS</span>
-                        <span class="text-[10px] font-semibold text-sky-100 uppercase tracking-tight">Indra Jaya Computer</span>
+                        <span class="text-[10px] font-semibold text-sky-100 uppercase tracking-tight block mt-0.5">Indra Jaya Computer</span>
                     </div>
                 </a>
 
-                <!-- DESKTOP MENU (RATA KANAN DENGAN EFEK GARIS BAWAH PUTIH) -->
+                <!-- DESKTOP MENU -->
                 <div class="hidden md:flex items-center space-x-8 text-sm font-semibold h-16">
                     <a href="{{ url('/') }}" class="h-full flex items-center text-sky-50 hover:text-white border-b-2 border-transparent hover:border-white transition-all duration-200">
                         Beranda
@@ -50,19 +50,24 @@
                         Cek Status
                     </a>
                     <a href="{{ url('/') }}#layanan" class="h-full flex items-center text-sky-50 hover:text-white border-b-2 border-transparent hover:border-white transition-all duration-200">
-                        Katalog
+                        Layanan
                     </a>
                     <a href="{{ url('/') }}#biaya" class="h-full flex items-center text-sky-50 hover:text-white border-b-2 border-transparent hover:border-white transition-all duration-200">
-                        Biaya
+                        Tarif Biaya
                     </a>
-                    <a href="{{ url('/') }}#kontak" class="h-full flex items-center text-sky-50 hover:text-white border-b-2 border-transparent hover:border-white transition-all duration-200">
-                        Lokasi
+                    <a href="{{ url('/') }}#lokasi" class="h-full flex items-center text-sky-50 hover:text-white border-b-2 border-transparent hover:border-white transition-all duration-200">
+                        Lokasi Toko
                     </a>
                 </div>
 
                 <!-- MOBILE HAMBURGER BUTTON -->
                 <div class="flex md:hidden items-center">
-                    <button @click="open = !open" type="button" class="p-2 rounded-xl bg-white/15 hover:bg-white/25 text-white focus:outline-none transition border border-white/20">
+                    <button 
+                        @click="open = !open" 
+                        type="button" 
+                        class="p-2 rounded-xl bg-white/15 hover:bg-white/25 text-white focus:outline-none transition border border-white/20"
+                        aria-label="Toggle Navigation Menu"
+                    >
                         <i class="fa-solid" :class="open ? 'fa-xmark text-xl' : 'fa-bars text-xl'"></i>
                     </button>
                 </div>
@@ -81,19 +86,19 @@
              @click.away="open = false"
              class="md:hidden bg-sky-600/95 backdrop-blur-lg border-t border-sky-400/40 px-4 pt-2 pb-5 space-y-1 shadow-xl">
             
-            <a href="{{ url('/') }}" class="block px-3 py-2.5 rounded-lg text-sky-50 hover:text-white hover:bg-white/15 font-semibold text-sm transition">
+            <a href="{{ url('/') }}" @click="open = false" class="block px-3 py-2.5 rounded-lg text-sky-50 hover:text-white hover:bg-white/15 font-semibold text-sm transition">
                 Beranda
             </a>
-            <a href="{{ url('/') }}#tracking" class="block px-3 py-2.5 rounded-lg text-sky-50 hover:text-white hover:bg-white/15 font-semibold text-sm transition">
+            <a href="{{ url('/') }}#tracking" @click="open = false" class="block px-3 py-2.5 rounded-lg text-sky-50 hover:text-white hover:bg-white/15 font-semibold text-sm transition">
                 Cek Status Servis
             </a>
-            <a href="{{ url('/') }}#layanan" class="block px-3 py-2.5 rounded-lg text-sky-50 hover:text-white hover:bg-white/15 font-semibold text-sm transition">
-                Katalog Sparepart
+            <a href="{{ url('/') }}#layanan" @click="open = false" class="block px-3 py-2.5 rounded-lg text-sky-50 hover:text-white hover:bg-white/15 font-semibold text-sm transition">
+                Spesialis Layanan
             </a>
-            <a href="{{ url('/') }}#biaya" class="block px-3 py-2.5 rounded-lg text-sky-50 hover:text-white hover:bg-white/15 font-semibold text-sm transition">
-                Estimasi Biaya
+            <a href="{{ url('/') }}#biaya" @click="open = false" class="block px-3 py-2.5 rounded-lg text-sky-50 hover:text-white hover:bg-white/15 font-semibold text-sm transition">
+                Tarif Biaya
             </a>
-            <a href="{{ url('/') }}#kontak" class="block px-3 py-2.5 rounded-lg text-sky-50 hover:text-white hover:bg-white/15 font-semibold text-sm transition">
+            <a href="{{ url('/') }}#lokasi" @click="open = false" class="block px-3 py-2.5 rounded-lg text-sky-50 hover:text-white hover:bg-white/15 font-semibold text-sm transition">
                 Lokasi Toko
             </a>
         </div>
