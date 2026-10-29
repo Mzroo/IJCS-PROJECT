@@ -18,6 +18,10 @@ export default defineConfig({
         tailwindcss(),
     ],
     server: {
+        // host: '0.0.0.0', // <-- Tambahkan ini agar Vite membuka port ke jaringan lokal
+        // hmr: {
+        //     host: '192.168.79.31', // <-- IP laptop kamu
+        // },
         watch: {
             ignored: ['**/storage/framework/views/**'],
         },

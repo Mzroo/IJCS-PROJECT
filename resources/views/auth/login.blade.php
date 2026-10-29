@@ -1,23 +1,87 @@
 <!DOCTYPE html>
-<html lang="id" class="h-full bg-slate-50">
+<html lang="id" class="h-full bg-slate-100">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Staf IJCS</title>
 
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
     {{-- Assets bundling dari Laravel Vite --}}
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-</head>
-<body class="h-full flex items-center justify-center p-4 font-sans antialiased text-gray-900">
 
-    <div class="w-full max-w-sm sm:max-w-md">
+    <style>
+        [x-cloak] { display: none !important; }
+    </style>
+</head>
+<body class="min-h-full flex items-center justify-center p-4 sm:p-6 font-sans antialiased text-gray-900 bg-slate-100 relative overflow-x-hidden">
+
+    <!-- BACKGROUND DOODLE WATERMARK SOFT (WARNA ABUS-ABU SOFT / SKY) -->
+    <div class="fixed inset-0 pointer-events-none z-0 opacity-20 flex flex-wrap justify-between p-8 text-sky-600 select-none overflow-hidden">
+        <i class="fa-solid fa-screwdriver-wrench text-6xl absolute top-10 left-10 rotate-12"></i>
+        <i class="fa-solid fa-microchip text-7xl absolute top-1/4 right-16 -rotate-12"></i>
+        <i class="fa-solid fa-laptop text-8xl absolute bottom-12 left-16 -rotate-6"></i>
+        <i class="fa-solid fa-gear text-7xl absolute bottom-1/3 right-1/4 rotate-45"></i>
+        <i class="fa-solid fa-plug text-5xl absolute top-12 right-1/3 rotate-12"></i>
+        <i class="fa-solid fa-hard-drive text-6xl absolute bottom-10 right-10 -rotate-12"></i>
+        <i class="fa-solid fa-bug text-5xl absolute top-1/2 left-12 rotate-90"></i>
+        <i class="fa-solid fa-code text-6xl absolute top-1/3 left-1/3 -rotate-12"></i>
+        <i class="fa-solid fa-desktop text-7xl absolute bottom-1/4 left-1/4 rotate-12"></i>
+    </div>
+
+    <!-- SOFT GLOW LIGHT EFFECT BEHIND CARD -->
+    <div class="absolute w-[30rem] h-[30rem] bg-sky-300/30 rounded-full blur-3xl pointer-events-none z-0"></div>
+
+    <!-- MAIN CONTAINER CARD SPLIT -->
+    <div class="w-full max-w-4xl bg-white rounded-3xl border border-gray-200/80 shadow-xl overflow-hidden grid grid-cols-1 md:grid-cols-2 relative z-10">
         
-        <!-- CARD LOGIN -->
-        <div class="bg-white rounded-2xl p-6 sm:p-8 border border-gray-200/80 shadow-sm">
+        <!-- KOLOM KIRI: GAMBAR MASKOT & BRANDING (Hanya tampil di Tablet/Desktop) -->
+        <div class="hidden md:flex flex-col justify-between p-8 bg-gradient-to-br from-slate-900 via-slate-800 to-sky-950 text-white relative overflow-hidden">
             
-            <!-- HEADER CARD -->
+            <!-- Branding Logo Header -->
+            <div class="relative z-10 flex items-center space-x-3">
+                <div class="bg-sky-500 text-white p-2.5 rounded-2xl shadow-lg shadow-sky-500/30">
+                    <i class="fa-solid fa-laptop-code text-lg"></i>
+                </div>
+                <div>
+                    <h2 class="font-black text-xl tracking-wider leading-none">IJCS <span class="text-sky-400 text-xs font-semibold">SYSTEM</span></h2>
+                    <p class="text-[10px] text-slate-400 font-medium">Indra Jaya Computer Service</p>
+                </div>
+            </div>
+
+            <!-- Gambar Maskot Teknisi IJCS -->
+            <div class="relative z-10 my-4 flex justify-center items-center">
+                <img 
+                    src="{{ asset('assets/img/login-img.png') }}" 
+                    alt="IJCS Technician Repair Mascot" 
+                    class="max-h-[340px] w-auto object-contain drop-shadow-2xl hover:scale-105 transition-transform duration-300"
+                >
+            </div>
+
+            <!-- Footer Quote / Note -->
+            <div class="relative z-10 bg-white/10 backdrop-blur-md border border-white/10 p-4 rounded-2xl text-xs text-slate-300">
+                <p class="font-semibold text-white mb-0.5">Sistem Internal Staf & Teknisi</p>
+                <p class="text-[11px] text-slate-400 leading-relaxed">Kelola servisan, inventaris sparepart, dan rekap transaksi dengan cepat dan presisi.</p>
+            </div>
+
+            <!-- Pattern Dekorasif Background Card Kiri -->
+            <div class="absolute -bottom-16 -left-16 w-64 h-64 bg-sky-500/20 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="absolute -top-16 -right-16 w-64 h-64 bg-blue-600/20 rounded-full blur-3xl pointer-events-none"></div>
+        </div>
+
+        <!-- KOLOM KANAN: FORM LOGIN -->
+        <div class="p-6 sm:p-10 flex flex-col justify-center bg-white">
+            
+            <!-- HEADER CARD (Versi Mobile ada Logo) -->
             <div class="mb-6">
-                <h1 class="text-xl font-bold text-gray-900 text-center">Login Staf IJCS</h1>
+                <div class="flex items-center space-x-2.5 mb-3 md:hidden">
+                    <div class="bg-sky-600 text-white p-2 rounded-xl text-xs">
+                        <i class="fa-solid fa-laptop-code"></i>
+                    </div>
+                    <span class="font-black text-base tracking-wider text-gray-900">IJCS <span class="text-sky-600 text-xs">ADMIN</span></span>
+                </div>
+                <h1 class="text-xl sm:text-2xl font-black text-gray-900">Login Staf IJCS</h1>
                 <p class="text-xs text-gray-500 mt-1">Masukkan kredensial akun untuk mengakses sistem</p>
             </div>
 
@@ -30,7 +94,7 @@
 
             @if ($errors->any())
                 <div class="mb-4 p-3 bg-rose-50 border border-rose-200 text-rose-700 text-xs rounded-xl font-medium">
-                    <ul class="list-disc list-inside">
+                    <ul class="list-disc list-inside space-y-0.5">
                         @foreach ($errors->all() as $error)
                             <li>{{ $error }}</li>
                         @endforeach
@@ -96,7 +160,7 @@
                     </div>
                 </div>
 
-                <!-- KATA SANDI (TANPA TOMBOL LUPA SANDI) -->
+                <!-- KATA SANDI -->
                 <div>
                     <label for="password" class="block text-xs font-bold text-gray-700 mb-1.5">
                         Kata Sandi
@@ -160,21 +224,21 @@
                     >
                     
                     <!-- ERROR CAPTCHA -->
-                    <p x-show="captchaError" class="text-[11px] text-rose-600 font-medium mt-1">
+                    <p x-show="captchaError" class="text-[11px] text-rose-600 font-medium mt-1" x-cloak>
                         *Kode captcha tidak sesuai, silakan coba lagi.
                     </p>
                 </div>
 
-                <!-- SUBMIT -->
+                <!-- SUBMIT BUTTON -->
                 <button 
                     type="submit" 
                     :disabled="loading"
-                    class="w-full bg-sky-600 hover:bg-sky-700 text-white font-bold py-3 px-4 rounded-xl text-xs sm:text-sm transition flex items-center justify-center space-x-2 shadow-sm disabled:opacity-75"
+                    class="w-full bg-sky-600 hover:bg-sky-700 text-white font-bold py-3 px-4 rounded-xl text-xs sm:text-sm transition flex items-center justify-center space-x-2 shadow-md shadow-sky-600/20 disabled:opacity-75"
                 >
                     <template x-if="!loading">
-                        < class="flex items-center gap-2">
-                            <span>LOGIN</span>
-                            
+                        <div class="flex items-center gap-2">
+                            <span>LOGIN KEDALAM SISTEM</span>
+                        </div>
                     </template>
                     <template x-if="loading">
                         <div class="flex items-center gap-2">

@@ -173,7 +173,6 @@
         <div class="mt-6 sm:hidden text-center">
             <a href="#" class="w-full bg-indigo-50 hover:bg-indigo-100 border border-indigo-200/80 text-indigo-700 font-bold py-3 px-4 rounded-xl text-xs transition flex items-center justify-center gap-2">
                 <span>Lihat Semua Produk Katalog</span>
-                <i class="fa-solid fa-arrow-right text-xs"></i>
             </a>
         </div>
 
