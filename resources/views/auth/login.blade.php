@@ -17,7 +17,7 @@
 </head>
 <body class="min-h-full flex items-center justify-center p-4 sm:p-6 font-sans antialiased text-gray-900 bg-slate-100 relative overflow-x-hidden">
 
-    <!-- BACKGROUND DOODLE WATERMARK SOFT (WARNA ABUS-ABU SOFT / SKY) -->
+    <!-- BACKGROUND DOODLE WATERMARK SOFT -->
     <div class="fixed inset-0 pointer-events-none z-0 opacity-20 flex flex-wrap justify-between p-8 text-sky-600 select-none overflow-hidden">
         <i class="fa-solid fa-screwdriver-wrench text-6xl absolute top-10 left-10 rotate-12"></i>
         <i class="fa-solid fa-microchip text-7xl absolute top-1/4 right-16 -rotate-12"></i>
@@ -85,7 +85,7 @@
                 <p class="text-xs text-gray-500 mt-1">Masukkan kredensial akun untuk mengakses sistem</p>
             </div>
 
-            <!-- ALERT ERROR -->
+            <!-- ALERT ERROR BACKEND -->
             @if (session('status'))
                 <div class="mb-4 p-3 bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs rounded-xl font-medium">
                     {{ session('status') }}
@@ -105,36 +105,18 @@
             <!-- FORM LOGIN + CAPTCHA -->
             <form 
                 method="POST" 
-                action="/login" 
+                action="{{ route('login') }}" 
                 class="space-y-4" 
                 x-data="{
                     showPassword: false,
                     loading: false,
-                    captchaCode: '',
+                    captchaCode: '{{ $captchaCode }}',
                     userCaptcha: '',
-                    captchaError: false,
                     generateCaptcha() {
-                        const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-                        let result = '';
-                        for (let i = 0; i < 4; i++) {
-                            result += chars.charAt(Math.floor(Math.random() * chars.length));
-                        }
-                        this.captchaCode = result;
-                    },
-                    submitForm(e) {
-                        if (this.userCaptcha.toUpperCase() !== this.captchaCode) {
-                            e.preventDefault();
-                            this.captchaError = true;
-                            this.userCaptcha = '';
-                            this.generateCaptcha();
-                        } else {
-                            this.captchaError = false;
-                            this.loading = true;
-                        }
+                        window.location.reload();
                     }
                 }"
-                x-init="generateCaptcha()"
-                @submit="submitForm($event)"
+                @submit="loading = true"
             >
                 @csrf
 
@@ -194,7 +176,7 @@
                     </label>
                     
                     <div class="flex items-center gap-2 mb-2">
-                        <!-- BOX CAPTCHA SOFT ABU-ABU -->
+                        <!-- BOX CAPTCHA -->
                         <div class="bg-slate-100 text-slate-800 px-4 py-2 rounded-xl text-base font-mono font-black tracking-widest select-none flex items-center justify-center border border-slate-200 w-28 shrink-0 relative overflow-hidden">
                             <div class="absolute inset-0 bg-gradient-to-r from-transparent via-black/5 to-transparent skew-x-12"></div>
                             <span x-text="captchaCode"></span>
@@ -213,20 +195,16 @@
                         <span class="text-[11px] text-gray-400 leading-tight">Masukkan kode 4 karakter</span>
                     </div>
 
-                    <!-- INPUT CAPTCHA -->
+                    <!-- INPUT CAPTCHA (Name="captcha" Wajib) -->
                     <input 
                         type="text" 
+                        name="captcha"
                         x-model="userCaptcha"
                         required 
                         maxlength="4"
                         placeholder="Ketik kode di atas"
                         class="w-full px-3 py-2.5 bg-slate-50 border border-gray-200 rounded-xl text-xs sm:text-sm text-gray-900 uppercase font-mono tracking-wider focus:outline-none focus:bg-white focus:border-sky-500 transition"
                     >
-                    
-                    <!-- ERROR CAPTCHA -->
-                    <p x-show="captchaError" class="text-[11px] text-rose-600 font-medium mt-1" x-cloak>
-                        *Kode captcha tidak sesuai, silakan coba lagi.
-                    </p>
                 </div>
 
                 <!-- SUBMIT BUTTON -->
@@ -238,6 +216,7 @@
                     <template x-if="!loading">
                         <div class="flex items-center gap-2">
                             <span>LOGIN KEDALAM SISTEM</span>
+                            <i class="fa-solid fa-arrow-right text-xs"></i>
                         </div>
                     </template>
                     <template x-if="loading">

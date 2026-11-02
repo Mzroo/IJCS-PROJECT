@@ -3,20 +3,41 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Models\ServiceTicket;
+use Illuminate\Support\Facades\DB;
+use Illuminate\View\View;
 
 class DashboardController extends Controller
 {
-    public function index()
+    /**
+     * Menampilkan overview ringkasan statistik dashboard.
+     */
+    public function index(): View
     {
-        // Nantinya data statistik ini diambil dari database (Model)
-        $stats = [
-            'total_tiket'      => 12,
-            'siap_diambil'     => 5,
-            'total_sparepart'  => 540,
-            'pendapatan_bulan' => 8450000,
-        ];
+        // 1. Statistik Utama Tiket Servis
+        $totalActive = ServiceTicket::whereIn('status', ['received', 'checking', 'working', 'pending_sparepart'])->count();
+        $totalCompleted = ServiceTicket::where('status', 'completed')->count();
+        $totalTakenToday = ServiceTicket::where('status', 'taken')
+            ->whereDate('updated_at', now()->today())
+            ->count();
 
-        return view('admin.dashboard', compact('stats'));
+        // 2. Total Pendapatan Kasir Hari Ini (Hanya transaksi yang sudah LUNAS/paid)
+        $incomeToday = ServiceTicket::where('payment_status', 'paid')
+            ->whereDate('updated_at', now()->today())
+            ->sum('total_amount');
+
+        // 3. Antrean Servis Terbaru (5 Tiket Terakhir)
+        $recentServices = ServiceTicket::with(['customer', 'technician'])
+            ->latest()
+            ->take(5)
+            ->get();
+
+        return view('admin.dashboard', compact(
+            'totalActive',
+            'totalCompleted',
+            'totalTakenToday',
+            'incomeToday',
+            'recentServices'
+        ));
     }
 }

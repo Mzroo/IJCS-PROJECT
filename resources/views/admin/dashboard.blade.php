@@ -1,126 +1,139 @@
 @extends('layouts.admin')
 
+@section('title', 'Dashboard Overview')
+
 @section('content')
 <div class="space-y-6">
 
-    <!-- Welcome Banner -->
-    <div class="relative overflow-hidden bg-gradient-to-r from-sky-600 to-blue-700 rounded-3xl p-5 sm:p-8 text-white shadow-lg shadow-sky-600/20">
-        <div class="relative z-10">
-            <h1 class="text-xl sm:text-2xl md:text-3xl font-black tracking-tight leading-snug">
-                Selamat Datang, Admin IJCS! 👋
-            </h1>
-            <p class="text-sky-100 text-xs sm:text-sm mt-1.5 max-w-xl leading-relaxed">
-                Pantau perkembangan tiket servis laptop, stok sparepart, dan rekapitulasi transaksi toko dalam satu panel terpadu.
-            </p>
+    <!-- HEADER / UCAPAN SELAMAT DATANG -->
+    <div class="bg-gradient-to-r from-sky-600 to-blue-700 p-6 sm:p-8 rounded-3xl text-white shadow-xl shadow-sky-600/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div>
+            <h1 class="text-xl sm:text-2xl font-black tracking-tight">Selamat Datang, {{ auth()->user()->name }}!</h1>
+            <p class="text-xs sm:text-sm text-sky-100 mt-1">Sistem Manajemen Servis Laptop & Komputer — <strong>Indra Jaya Computer</strong></p>
         </div>
-        <i class="fa-solid fa-laptop-code absolute -right-4 -bottom-4 text-7xl sm:text-9xl text-white/10 pointer-events-none"></i>
+        <a href="{{ route('services.create') }}" class="px-4 py-2.5 bg-white hover:bg-sky-50 text-sky-700 text-xs font-bold rounded-2xl shadow-md transition flex items-center gap-2 cursor-pointer">
+            <i class="fa-solid fa-plus-circle text-sky-600"></i>
+            <span>Terima Servis Baru</span>
+        </a>
     </div>
 
-    <!-- Ringkasan Stat Cards: Mobile (grid-cols-2), Tablet (lg:grid-cols-2), Desktop Besar (xl:grid-cols-4) -->
-    <div class="grid grid-cols-2 xl:grid-cols-4 gap-3 sm:gap-5">
+    <!-- GRID STATISTIK CARD -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
         
-        <!-- Card 1: Tiket Servis -->
-        <div class="bg-white p-4 sm:p-5 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition flex flex-col justify-between">
-            <div class="flex items-start justify-between gap-2">
-                <div>
-                    <p class="text-[10px] sm:text-xs font-semibold text-gray-500 uppercase tracking-wider">Tiket Servis</p>
-                    <h3 class="text-lg sm:text-2xl font-black text-gray-900 mt-1">
-                        {{ $stats['total_tiket'] }} <span class="text-[10px] sm:text-xs font-normal text-gray-400">Unit</span>
-                    </h3>
-                </div>
-                <div class="w-8 h-8 sm:w-11 sm:h-11 rounded-xl bg-sky-50 text-sky-600 flex items-center justify-center text-sm sm:text-lg shrink-0">
-                    <i class="fa-solid fa-ticket"></i>
-                </div>
+        <!-- CARD 1: ANTREAN AKTIF -->
+        <div class="bg-white p-5 rounded-3xl border border-slate-200/80 shadow-xs flex items-center justify-between">
+            <div>
+                <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Servis Aktif</span>
+                <span class="text-2xl font-black text-slate-900 mt-0.5 block">{{ number_format($totalActive) }}</span>
+                <span class="text-[10px] text-amber-600 font-bold mt-1 inline-block">Sedang Diproses</span>
+            </div>
+            <div class="w-12 h-12 rounded-2xl bg-amber-50 border border-amber-200/60 flex items-center justify-center text-amber-600 text-lg">
+                <i class="fa-solid fa-screwdriver-wrench"></i>
             </div>
         </div>
 
-        <!-- Card 2: Siap Diambil -->
-        <div class="bg-white p-4 sm:p-5 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition flex flex-col justify-between">
-            <div class="flex items-start justify-between gap-2">
-                <div>
-                    <p class="text-[10px] sm:text-xs font-semibold text-gray-500 uppercase tracking-wider">Siap Diambil</p>
-                    <h3 class="text-lg sm:text-2xl font-black text-emerald-600 mt-1">
-                        {{ $stats['siap_diambil'] }} <span class="text-[10px] sm:text-xs font-normal text-gray-400">Unit</span>
-                    </h3>
-                </div>
-                <div class="w-8 h-8 sm:w-11 sm:h-11 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-sm sm:text-lg shrink-0">
-                    <i class="fa-solid fa-circle-check"></i>
-                </div>
+        <!-- CARD 2: SIAP DIAMBIL -->
+        <div class="bg-white p-5 rounded-3xl border border-slate-200/80 shadow-xs flex items-center justify-between">
+            <div>
+                <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Siap Diambil</span>
+                <span class="text-2xl font-black text-slate-900 mt-0.5 block">{{ number_format($totalCompleted) }}</span>
+                <span class="text-[10px] text-emerald-600 font-bold mt-1 inline-block">Selesai Dikerjakan</span>
+            </div>
+            <div class="w-12 h-12 rounded-2xl bg-emerald-50 border border-emerald-200/60 flex items-center justify-center text-emerald-600 text-lg">
+                <i class="fa-solid fa-circle-check"></i>
             </div>
         </div>
 
-        <!-- Card 3: Stok Sparepart -->
-        <div class="bg-white p-4 sm:p-5 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition flex flex-col justify-between">
-            <div class="flex items-start justify-between gap-2">
-                <div>
-                    <p class="text-[10px] sm:text-xs font-semibold text-gray-500 uppercase tracking-wider">Stok Sparepart</p>
-                    <h3 class="text-lg sm:text-2xl font-black text-gray-900 mt-1">
-                        {{ $stats['total_sparepart'] }} <span class="text-[10px] sm:text-xs font-normal text-gray-400">Item</span>
-                    </h3>
-                </div>
-                <div class="w-8 h-8 sm:w-11 sm:h-11 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-sm sm:text-lg shrink-0">
-                    <i class="fa-solid fa-boxes-stacked"></i>
-                </div>
+        <!-- CARD 3: DIAMBIL HARI INI -->
+        <div class="bg-white p-5 rounded-3xl border border-slate-200/80 shadow-xs flex items-center justify-between">
+            <div>
+                <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Diambil Hari Ini</span>
+                <span class="text-2xl font-black text-slate-900 mt-0.5 block">{{ number_format($totalTakenToday) }}</span>
+                <span class="text-[10px] text-sky-600 font-bold mt-1 inline-block">Unit Diserahkan</span>
+            </div>
+            <div class="w-12 h-12 rounded-2xl bg-sky-50 border border-sky-200/60 flex items-center justify-center text-sky-600 text-lg">
+                <i class="fa-solid fa-box-open"></i>
             </div>
         </div>
 
-        <!-- Card 4: Pendapatan -->
-        <div class="bg-white p-4 sm:p-5 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition flex flex-col justify-between">
-            <div class="flex items-start justify-between gap-2">
-                <div>
-                    <p class="text-[10px] sm:text-xs font-semibold text-gray-500 uppercase tracking-wider">Pendapatan</p>
-                    <h3 class="text-base sm:text-xl font-black text-sky-600 mt-1">
-                        Rp {{ number_format($stats['pendapatan_bulan'], 0, ',', '.') }}
-                    </h3>
-                </div>
-                <div class="w-8 h-8 sm:w-11 sm:h-11 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-sm sm:text-lg shrink-0">
-                    <i class="fa-solid fa-wallet"></i>
-                </div>
+        <!-- CARD 4: PENDAPATAN HARI INI -->
+        <div class="bg-white p-5 rounded-3xl border border-slate-200/80 shadow-xs flex items-center justify-between">
+            <div>
+                <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Pendapatan Hari Ini</span>
+                <span class="text-xl font-black text-emerald-600 mt-0.5 block">Rp {{ number_format($incomeToday, 0, ',', '.') }}</span>
+                <span class="text-[10px] text-slate-400 font-bold mt-1 inline-block">Kasir & Pelunasan</span>
+            </div>
+            <div class="w-12 h-12 rounded-2xl bg-slate-900 flex items-center justify-center text-emerald-400 text-lg shadow-md shadow-slate-900/20">
+                <i class="fa-solid fa-wallet"></i>
             </div>
         </div>
 
     </div>
 
-    <!-- Tabel Servis Terbaru (Responsif Scroll Horizontal di Mobile) -->
-    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-        <div class="p-4 sm:p-5 border-b border-gray-100 flex items-center justify-between">
-            <h3 class="font-bold text-gray-800 text-sm sm:text-base">Antrean Servis Terbaru</h3>
-            <a href="#" class="text-xs font-semibold text-sky-600 hover:text-sky-700">Lihat Semua →</a>
+    <!-- TABEL ANTREAN SERVIS TERBARU -->
+    <div class="bg-white rounded-3xl border border-slate-200/80 shadow-xs overflow-hidden space-y-4 p-6">
+        <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+            <h2 class="text-sm font-bold text-slate-900 flex items-center gap-2">
+                <i class="fa-solid fa-clock-rotate-left text-sky-600"></i>
+                <span>Antrean Servis Terbaru</span>
+            </h2>
+            <a href="{{ route('services.index') }}" class="text-xs font-bold text-sky-600 hover:text-sky-700 transition flex items-center gap-1">
+                <span>Lihat Semua</span>
+                <i class="fa-solid fa-chevron-right text-[10px]"></i>
+            </a>
         </div>
+
         <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse min-w-[500px]">
+            <table class="w-full text-left border-collapse">
                 <thead>
-                    <tr class="bg-gray-50 text-gray-500 text-[10px] sm:text-[11px] font-bold uppercase tracking-wider">
-                        <th class="p-3 sm:p-4">No. Tiket</th>
-                        <th class="p-3 sm:p-4">Pelanggan</th>
-                        <th class="p-3 sm:p-4">Perangkat</th>
-                        <th class="p-3 sm:p-4">Kerusakan</th>
-                        <th class="p-3 sm:p-4">Status</th>
+                    <tr class="border-b border-slate-100 text-[10px] font-bold uppercase tracking-wider text-slate-400 bg-slate-50/50">
+                        <th class="py-3 px-4 rounded-l-xl">No. Tiket</th>
+                        <th class="py-3 px-4">Pelanggan</th>
+                        <th class="py-3 px-4">Perangkat</th>
+                        <th class="py-3 px-4">Status</th>
+                        <th class="py-3 px-4 text-right rounded-r-xl">Aksi</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-100 text-xs font-medium text-gray-700">
-                    <tr class="hover:bg-gray-50/50 transition">
-                        <td class="p-3 sm:p-4 font-bold text-sky-600">#TK-1002</td>
-                        <td class="p-3 sm:p-4 font-semibold text-gray-900">Budi Santoso</td>
-                        <td class="p-3 sm:p-4">Asus ROG Strix G15</td>
-                        <td class="p-3 sm:p-4 text-gray-500">Mati Total / Overheat</td>
-                        <td class="p-3 sm:p-4">
-                            <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-50 text-amber-600 border border-amber-200 whitespace-nowrap">
-                                Dalam Pengecekan
-                            </span>
-                        </td>
-                    </tr>
-                    <tr class="hover:bg-gray-50/50 transition">
-                        <td class="p-3 sm:p-4 font-bold text-sky-600">#TK-1001</td>
-                        <td class="p-3 sm:p-4 font-semibold text-gray-900">Siti Rahma</td>
-                        <td class="p-3 sm:p-4">Lenovo Ideapad Slim 3</td>
-                        <td class="p-3 sm:p-4 text-gray-500">Ganti LCD 14 Inch</td>
-                        <td class="p-3 sm:p-4">
-                            <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-sky-50 text-sky-600 border border-sky-200 whitespace-nowrap">
-                                Sedang Dikerjakan
-                            </span>
-                        </td>
-                    </tr>
+                <tbody class="divide-y divide-slate-100 text-xs">
+                    @forelse ($recentServices as $service)
+                        <tr class="hover:bg-slate-50/80 transition">
+                            <td class="py-3.5 px-4 font-mono font-bold text-sky-600">
+                                {{ $service->ticket_number }}
+                            </td>
+                            <td class="py-3.5 px-4 font-bold text-slate-800">
+                                {{ $service->customer->name }}
+                            </td>
+                            <td class="py-3.5 px-4 font-medium text-slate-700">
+                                {{ $service->device_name }}
+                            </td>
+                            <td class="py-3.5 px-4">
+                                @php
+                                    $badges = [
+                                        'received'          => 'bg-sky-50 text-sky-700 border-sky-200',
+                                        'checking'          => 'bg-amber-50 text-amber-700 border-amber-200',
+                                        'working'           => 'bg-indigo-50 text-indigo-700 border-indigo-200',
+                                        'pending_sparepart' => 'bg-orange-50 text-orange-700 border-orange-200',
+                                        'completed'         => 'bg-emerald-50 text-emerald-700 border-emerald-200',
+                                        'taken'             => 'bg-slate-100 text-slate-700 border-slate-200',
+                                        'cancelled'         => 'bg-rose-50 text-rose-700 border-rose-200',
+                                    ];
+                                @endphp
+                                <span class="px-2.5 py-1 border rounded-lg text-[10px] font-bold uppercase tracking-wider {{ $badges[$service->status] ?? 'bg-slate-100 text-slate-700' }}">
+                                    {{ str_replace('_', ' ', $service->status) }}
+                                </span>
+                            </td>
+                            <td class="py-3.5 px-4 text-right">
+                                <a href="{{ route('services.show', $service->id) }}" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-[11px] font-bold rounded-xl transition inline-flex items-center gap-1">
+                                    <i class="fa-solid fa-eye text-slate-500"></i>
+                                    <span>Detail</span>
+                                </a>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="5" class="py-6 text-center text-slate-400 text-xs">Belum ada transaksi servis.</td>
+                        </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>
