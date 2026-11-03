@@ -15,27 +15,33 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 
-// Root & Home Redirect
-Route::redirect('/', '/admin/dashboard');
-Route::redirect('/home', '/admin/dashboard');
-
 /*
 |--------------------------------------------------------------------------
 | Public Routes (Akses Bebas Tanpa Login)
 |--------------------------------------------------------------------------
 */
-// Route Tracking Servis Pelanggan via QR Code
-Route::get('/track/{token}', [TrackingController::class, 'show'])
-    ->name('public.track');
+
+// Halaman Utama Publik (Landing Page Toko)
+Route::get('/', [TrackingController::class, 'home'])->name('public.home');
+
+// Form Pencarian Nomor Tiket dari Landing Page
+Route::post('/track/search', [TrackingController::class, 'search'])->name('public.track.search');
+
+// Route Tracking Servis Pelanggan via QR Code / Token Direct
+Route::get('/track/{token}', [TrackingController::class, 'track'])->name('public.track');
+
+// Redirect /home ke Dashboard Admin
+Route::redirect('/home', '/admin/dashboard');
 
 /*
 |--------------------------------------------------------------------------
 | Authentication Routes (Guest Only)
+| Endpoint diubah ke /portal-ijcs untuk keamanan (Security through Obscurity)
 |--------------------------------------------------------------------------
 */
 Route::middleware('guest')->group(function () {
-    Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
-    Route::post('/login', [LoginController::class, 'login']);
+    Route::get('/portal-ijcs', [LoginController::class, 'showLoginForm'])->name('login');
+    Route::post('/portal-ijcs', [LoginController::class, 'login']);
 });
 
 /*

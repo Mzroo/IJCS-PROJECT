@@ -25,13 +25,13 @@
         </div>
     </div>
 
-    <!-- 2. NAVBAR UTAMA (GRADIEN BIRU SKY BLUE AWAL) -->
+    <!-- 2. NAVBAR UTAMA (GRADIEN BIRU SKY BLUE) -->
     <nav class="bg-gradient-to-r from-sky-400 via-sky-500 to-blue-500 text-white shadow-md transition-all">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
                 
                 <!-- BRAND LOGO -->
-                <a href="{{ url('/') }}" class="flex items-center space-x-3 group">
+                <a href="{{ route('public.home') }}" class="flex items-center space-x-3 group">
                     <div class="w-10 h-10 bg-white/20 backdrop-blur-md text-white rounded-xl flex items-center justify-center text-xl group-hover:scale-105 transition border border-white/30 shadow-inner shrink-0">
                         <i class="fa-solid fa-laptop-medical"></i>
                     </div>
@@ -41,23 +41,31 @@
                     </div>
                 </a>
 
-                <!-- DESKTOP MENU -->
+                <!-- DESKTOP MENU (MURNI PUBLIC) -->
                 <div class="hidden md:flex items-center space-x-8 text-sm font-semibold h-16">
-                    <a href="{{ url('/') }}" class="h-full flex items-center text-sky-50 hover:text-white border-b-2 border-transparent hover:border-white transition-all duration-200">
+                    <a href="{{ route('public.home') }}" class="h-full flex items-center text-sky-50 hover:text-white border-b-2 border-transparent hover:border-white transition-all duration-200">
                         Beranda
                     </a>
-                    <a href="{{ url('/') }}#tracking" class="h-full flex items-center text-sky-50 hover:text-white border-b-2 border-transparent hover:border-white transition-all duration-200">
+                    <a href="{{ route('public.home') }}#tracking" class="h-full flex items-center text-sky-50 hover:text-white border-b-2 border-transparent hover:border-white transition-all duration-200">
                         Cek Status
                     </a>
-                    <a href="{{ url('/') }}#layanan" class="h-full flex items-center text-sky-50 hover:text-white border-b-2 border-transparent hover:border-white transition-all duration-200">
+                    <a href="{{ route('public.home') }}#layanan" class="h-full flex items-center text-sky-50 hover:text-white border-b-2 border-transparent hover:border-white transition-all duration-200">
                         Layanan
                     </a>
-                    <a href="{{ url('/') }}#biaya" class="h-full flex items-center text-sky-50 hover:text-white border-b-2 border-transparent hover:border-white transition-all duration-200">
+                    <a href="{{ route('public.home') }}#biaya" class="h-full flex items-center text-sky-50 hover:text-white border-b-2 border-transparent hover:border-white transition-all duration-200">
                         Tarif Biaya
                     </a>
-                    <a href="{{ url('/') }}#lokasi" class="h-full flex items-center text-sky-50 hover:text-white border-b-2 border-transparent hover:border-white transition-all duration-200">
+                    <a href="{{ route('public.home') }}#lokasi" class="h-full flex items-center text-sky-50 hover:text-white border-b-2 border-transparent hover:border-white transition-all duration-200">
                         Lokasi Toko
                     </a>
+
+                    <!-- INDIKATOR JIKA STAF SEDANG LOGIN (ADMIN PANEL SHORTCUT) -->
+                    @auth
+                        <a href="{{ route('admin.dashboard') }}" class="px-4 py-2 bg-white/20 hover:bg-white/30 text-white text-xs font-bold rounded-xl border border-white/30 shadow-xs transition flex items-center gap-1.5">
+                            <i class="fa-solid fa-gauge-high text-xs"></i>
+                            <span>Dashboard Admin</span>
+                        </a>
+                    @endauth
                 </div>
 
                 <!-- MOBILE HAMBURGER BUTTON -->
@@ -84,23 +92,32 @@
              x-transition:leave-start="opacity-100 translate-y-0"
              x-transition:leave-end="opacity-0 -translate-y-2"
              @click.away="open = false"
-             class="md:hidden bg-sky-600/95 backdrop-blur-lg border-t border-sky-400/40 px-4 pt-2 pb-5 space-y-1 shadow-xl">
+             class="md:hidden bg-sky-600/95 backdrop-blur-lg border-t border-sky-400/40 px-4 pt-2 pb-5 space-y-1.5 shadow-xl">
             
-            <a href="{{ url('/') }}" @click="open = false" class="block px-3 py-2.5 rounded-lg text-sky-50 hover:text-white hover:bg-white/15 font-semibold text-sm transition">
+            <a href="{{ route('public.home') }}" @click="open = false" class="block px-3 py-2.5 rounded-lg text-sky-50 hover:text-white hover:bg-white/15 font-semibold text-sm transition">
                 Beranda
             </a>
-            <a href="{{ url('/') }}#tracking" @click="open = false" class="block px-3 py-2.5 rounded-lg text-sky-50 hover:text-white hover:bg-white/15 font-semibold text-sm transition">
+            <a href="{{ route('public.home') }}#tracking" @click="open = false" class="block px-3 py-2.5 rounded-lg text-sky-50 hover:text-white hover:bg-white/15 font-semibold text-sm transition">
                 Cek Status Servis
             </a>
-            <a href="{{ url('/') }}#layanan" @click="open = false" class="block px-3 py-2.5 rounded-lg text-sky-50 hover:text-white hover:bg-white/15 font-semibold text-sm transition">
+            <a href="{{ route('public.home') }}#layanan" @click="open = false" class="block px-3 py-2.5 rounded-lg text-sky-50 hover:text-white hover:bg-white/15 font-semibold text-sm transition">
                 Spesialis Layanan
             </a>
-            <a href="{{ url('/') }}#biaya" @click="open = false" class="block px-3 py-2.5 rounded-lg text-sky-50 hover:text-white hover:bg-white/15 font-semibold text-sm transition">
+            <a href="{{ route('public.home') }}#biaya" @click="open = false" class="block px-3 py-2.5 rounded-lg text-sky-50 hover:text-white hover:bg-white/15 font-semibold text-sm transition">
                 Tarif Biaya
             </a>
-            <a href="{{ url('/') }}#lokasi" @click="open = false" class="block px-3 py-2.5 rounded-lg text-sky-50 hover:text-white hover:bg-white/15 font-semibold text-sm transition">
+            <a href="{{ route('public.home') }}#lokasi" @click="open = false" class="block px-3 py-2.5 rounded-lg text-sky-50 hover:text-white hover:bg-white/15 font-semibold text-sm transition">
                 Lokasi Toko
             </a>
+
+            @auth
+                <div class="pt-2 border-t border-white/20">
+                    <a href="{{ route('admin.dashboard') }}" @click="open = false" class="flex items-center justify-center gap-2 w-full py-2.5 bg-white text-sky-600 font-bold text-xs rounded-xl shadow-md">
+                        <i class="fa-solid fa-gauge-high"></i>
+                        <span>Dashboard Admin</span>
+                    </a>
+                </div>
+            @endauth
         </div>
     </nav>
 </header>

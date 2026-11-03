@@ -23,16 +23,30 @@ class LoginController extends Controller
     public function login(LoginRequest $request): RedirectResponse
     {
         $request->authenticate();
+
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+
+        // Check 1: Verifikasi status keaktifan akun staf
+        if (!$user->is_active) {
+            Auth::logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+
+            return redirect()->route('login')->withErrors([
+                'email' => 'Akun Anda telah dinonaktifkan oleh Administrator. Silakan hubungi Owner toko.'
+            ]);
+        }
+
+        // Check 2: Regenerasi ID sesi untuk mencegah Session Fixation Attack
         $request->session()->regenerate();
 
-        // Redirect sesuai Role
-        $role = Auth::user()->role;
-
-        if (in_array($role, ['owner', 'admin'])) {
+        // Check 3: Pengalihan berdasarkan Hak Akses / Role
+        if (in_array($user->role, ['owner', 'admin'])) {
             return redirect()->intended('/admin/dashboard');
-        } else {
-            return redirect()->intended('/admin/services');
         }
+
+        return redirect()->intended('/admin/services');
     }
 
     public function logout(Request $request): RedirectResponse
@@ -41,6 +55,6 @@ class LoginController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect('/login');
+        return redirect()->route('public.home')->with('status', 'Anda telah berhasil keluar dari sistem.');
     }
 }

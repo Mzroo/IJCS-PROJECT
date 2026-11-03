@@ -25,9 +25,17 @@
                     </p>
                 </div>
 
+                <!-- NOTIFIKASI ERROR JIKA TIKET TIDAK DITEMUKAN -->
+                @if ($errors->has('ticket_number'))
+                    <div class="p-3 bg-rose-500/90 backdrop-blur-md border border-rose-200 text-white text-xs font-bold rounded-2xl shadow-md max-w-lg mx-auto lg:mx-0 text-left flex items-center gap-2.5">
+                        <i class="fa-solid fa-triangle-exclamation text-base shrink-0"></i>
+                        <span>{{ $errors->first('ticket_number') }}</span>
+                    </div>
+                @endif
+
                 <!-- FORM INPUT TRACKING TIKET -->
                 <div class="bg-white p-3 sm:p-4 rounded-2xl shadow-xl text-gray-800 max-w-lg mx-auto lg:mx-0 border border-sky-100">
-                    <form action="" method="POST" class="flex flex-col sm:flex-row gap-2">
+                    <form action="{{ route('public.track.search') }}" method="POST" class="flex flex-col sm:flex-row gap-2">
                         @csrf
                         <div class="relative flex-1">
                             <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-sky-500">
@@ -36,12 +44,13 @@
                             <input 
                                 type="text" 
                                 name="ticket_number" 
-                                placeholder="Ketik no. nota, contoh: IJCS-202610-001" 
+                                value="{{ old('ticket_number') }}"
+                                placeholder="Ketik no. nota, contoh: TK-8K9X2P" 
                                 required 
                                 class="w-full pl-9 pr-3 py-2.5 sm:py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-sky-500 font-mono font-bold uppercase text-xs sm:text-sm bg-gray-50/50 placeholder:normal-case placeholder:font-normal transition"
                             >
                         </div>
-                        <button type="submit" class="bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white px-5 py-2.5 sm:py-3 rounded-xl font-bold transition shadow-md hover:shadow-lg flex items-center justify-center space-x-2 text-xs sm:text-sm whitespace-nowrap shrink-0">
+                        <button type="submit" class="bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white px-5 py-2.5 sm:py-3 rounded-xl font-bold transition shadow-md hover:shadow-lg flex items-center justify-center space-x-2 text-xs sm:text-sm whitespace-nowrap shrink-0 cursor-pointer">
                             <i class="fa-solid fa-magnifying-glass text-xs"></i>
                             <span>Cek Sekarang</span>
                         </button>
@@ -51,7 +60,7 @@
                     <div class="mt-2 text-center lg:text-left">
                         <p class="text-[11px] sm:text-xs text-amber-700 font-medium flex items-center justify-center lg:justify-start gap-1.5 bg-amber-50/90 p-2 rounded-xl border border-amber-200/60">
                             <i class="fa-solid fa-circle-exclamation text-amber-500 shrink-0"></i>
-                            <span>Lupa nomor nota? Hubungi WhatsApp Admin IJCS.</span>
+                            <span>Lupa nomor nota? Hubungi <a href="https://wa.me/6281234567890" target="_blank" class="font-bold underline text-amber-800 hover:text-amber-900">WhatsApp Admin IJCS</a>.</span>
                         </p>
                     </div>
                 </div>
@@ -77,7 +86,7 @@
                     <div class="w-3/4 h-3 bg-slate-950/40 rounded-[100%] blur-sm -mt-2 relative z-10"></div>
                 </div>
 
-                <!-- 3 CARD STATISTIK FLOATING (TANPA CONTAINER PEMBUNGKUS) -->
+                <!-- 3 CARD STATISTIK FLOATING -->
                 <div class="w-full grid grid-cols-3 gap-2.5 -mt-6 xl:-mt-8 relative z-20">
                     
                     <!-- Card 1: Pelanggan Terbantu -->

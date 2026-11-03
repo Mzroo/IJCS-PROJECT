@@ -18,13 +18,13 @@ use Illuminate\View\View;
 
 class ServiceController extends Controller
 {
-/**
+    /**
      * Tampilkan daftar antrean servis dengan filter tab & pencarian.
      */
     public function index(Request $request): View
     {
-        $tab =$request->query('tab', 'active');
-        $search =$request->query('search');
+        $tab = $request->query('tab', 'active');
+        $search = $request->query('search');
 
         $query = ServiceTicket::with(['customer', 'technician', 'creator']);
 
@@ -38,17 +38,18 @@ class ServiceController extends Controller
         }
 
         // Filter berdasarkan pencarian kata kunci (No Tiket, Nama/HP Pelanggan, Nama Perangkat)
-        if ($search) {$query->where(function ($q) use ($search) {
-                $q->where('ticket_number', 'LIKE', "\%{$search}%")
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('ticket_number', 'LIKE', "%{$search}%")
                   ->orWhere('device_name', 'LIKE', "%{$search}%")
                   ->orWhereHas('customer', function ($c) use ($search) {
-                      $c->where('name', 'LIKE', "\%{$search}%")
+                      $c->where('name', 'LIKE', "%{$search}%")
                         ->orWhere('phone', 'LIKE', "%{$search}%");
                   });
             });
         }
 
-        $services =$query->latest()->paginate(10)->withQueryString();
+        $services = $query->latest()->paginate(10)->withQueryString();
 
         return view('admin.services.index', compact('services', 'tab', 'search'));
     }
@@ -95,14 +96,12 @@ class ServiceController extends Controller
                 $customer->update(['name' => $request->customer_name]);
             }
 
-            // 2. Generate Nomor Tiket Unik Format: TK-YYYYMMDD-XXX
-            $datePrefix = 'TK-' . date('Ymd') . '-';
-            $lastTicket = ServiceTicket::where('ticket_number', 'LIKE', $datePrefix . '%')
-                ->latest('id')
-                ->first();
-
-            $nextSequence = $lastTicket ? ((int) substr($lastTicket->ticket_number, -3)) + 1 : 1;
-            $ticketNumber = $datePrefix . str_pad((string) $nextSequence, 3, '0', STR_PAD_LEFT);
+            // 2. Generate Nomor Tiket Unik & Acak 9 Karakter (Contoh: TK-X8K9P2)
+            do {
+                $randomCode = strtoupper(Str::random(9));
+                $ticketNumber = 'TK-' . $randomCode;
+                $exists = ServiceTicket::where('ticket_number', $ticketNumber)->exists();
+            } while ($exists);
 
             // 3. Simpan Service Ticket
             $ticket = ServiceTicket::create([
@@ -193,7 +192,7 @@ class ServiceController extends Controller
 
         $service->save();
 
-        // Catat histori perubahan status (menggunakan getKey() untuk menghindari warning linter)
+        // Catat histori perubahan status
         $service->statusHistories()->create([
             'user_id'    => $currentUser->getKey(),
             'old_status' => $oldStatus,

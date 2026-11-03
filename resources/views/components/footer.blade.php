@@ -1,7 +1,7 @@
 <footer class="bg-slate-900 text-gray-300 pt-16 pb-8 border-t border-slate-800">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        <!-- GRID FOOTER Utama -->
+        <!-- GRID FOOTER UTAMA -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-12 pb-12 border-b border-slate-800">
             
             <!-- COL 1: BRANDING & DESKRIPSI TOKO (Col 5) -->
@@ -41,31 +41,31 @@
                 <h4 class="text-sm font-bold text-white uppercase tracking-wider">Navigasi</h4>
                 <ul class="space-y-2 text-xs sm:text-sm">
                     <li>
-                        <a href="#tracking" class="text-gray-400 hover:text-sky-400 transition flex items-center gap-1.5">
+                        <a href="{{ route('public.home') }}#tracking" class="text-gray-400 hover:text-sky-400 transition flex items-center gap-1.5">
                             <i class="fa-solid fa-chevron-right text-[10px] text-sky-500"></i>
                             <span>Cek Status Servis</span>
                         </a>
                     </li>
                     <li>
-                        <a href="#layanan" class="text-gray-400 hover:text-sky-400 transition flex items-center gap-1.5">
+                        <a href="{{ route('public.home') }}#layanan" class="text-gray-400 hover:text-sky-400 transition flex items-center gap-1.5">
                             <i class="fa-solid fa-chevron-right text-[10px] text-sky-500"></i>
                             <span>Spesialis Layanan</span>
                         </a>
                     </li>
                     <li>
-                        <a href="#biaya" class="text-gray-400 hover:text-sky-400 transition flex items-center gap-1.5">
+                        <a href="{{ route('public.home') }}#biaya" class="text-gray-400 hover:text-sky-400 transition flex items-center gap-1.5">
                             <i class="fa-solid fa-chevron-right text-[10px] text-sky-500"></i>
                             <span>Estimasi Biaya</span>
                         </a>
                     </li>
                     <li>
-                        <a href="#faq" class="text-gray-400 hover:text-sky-400 transition flex items-center gap-1.5">
+                        <a href="{{ route('public.home') }}#faq" class="text-gray-400 hover:text-sky-400 transition flex items-center gap-1.5">
                             <i class="fa-solid fa-chevron-right text-[10px] text-sky-500"></i>
                             <span>Tanya Jawab (FAQ)</span>
                         </a>
                     </li>
                     <li>
-                        <a href="#lokasi" class="text-gray-400 hover:text-sky-400 transition flex items-center gap-1.5">
+                        <a href="{{ route('public.home') }}#lokasi" class="text-gray-400 hover:text-sky-400 transition flex items-center gap-1.5">
                             <i class="fa-solid fa-chevron-right text-[10px] text-sky-500"></i>
                             <span>Lokasi Toko</span>
                         </a>
@@ -94,10 +94,26 @@
 
         </div>
 
-        <!-- BOTTOM COPYRIGHT -->
-        <div class="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-gray-500 gap-4">
+        <!-- BOTTOM COPYRIGHT & RAHASIA AKSES STAF -->
+        <div class="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-gray-500 gap-3">
             <p>© {{ date('Y') }} IJCS (Indra Jaya Computer Service). All rights reserved.</p>
-            <p class="text-[11px]">Didesain dengan presisi & efisiensi tinggi.</p>
+            
+            <div class="flex items-center gap-3 text-[11px]">
+                <span class="text-gray-600">Didesain dengan presisi & efisiensi</span>
+                <span class="text-slate-700">•</span>
+                
+                @auth
+                    <a href="{{ route('admin.dashboard') }}" class="font-bold text-sky-400 hover:text-sky-300 transition flex items-center gap-1">
+                        <i class="fa-solid fa-gauge-high text-[10px]"></i>
+                        <span>Dashboard Admin</span>
+                    </a>
+                @else
+                    <a href="{{ route('login') }}" class="text-slate-600 hover:text-slate-400 transition flex items-center gap-1" title="Area Khusus Staf IJCS">
+                        <i class="fa-solid fa-lock text-[9px]"></i>
+                        <span>Akses Staf</span>
+                    </a>
+                @endauth
+            </div>
         </div>
 
     </div>
