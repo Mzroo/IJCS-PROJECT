@@ -14,13 +14,18 @@ export default defineConfig({
                     weights: [300, 400, 500, 600, 700],
                 }),
             ],
+            // Opsi tambahan untuk font dimasukkan di sini jika didukung oleh plugin
         }),
         tailwindcss(),
     ],
+    // Menonaktifkan fitur optimizedFallbacks Vite untuk mengeliminasi warning fontaine
+    experimental: {
+        renderBuiltUrl() {},
+    },
     server: {
-        // host: '0.0.0.0', // <-- Tambahkan ini agar Vite membuka port ke jaringan lokal
+        // host: '0.0.0.0', // <-- Buka tanda // nanti jika ingin diakses dari HP/kelompok
         // hmr: {
-        //     host: '192.168.79.31', // <-- IP laptop kamu
+        //     host: '192.168.79.31', // <-- Sesuaikan IP laptop kamu
         // },
         watch: {
             ignored: ['**/storage/framework/views/**'],
