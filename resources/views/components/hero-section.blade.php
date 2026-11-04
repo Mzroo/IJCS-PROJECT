@@ -2,9 +2,49 @@
     id="tracking" 
     x-data="{
         showScanner: false,
+        showResultModal: false,
+        isLoading: false,
+        errorMessage: '',
+        modalHtml: '',
         html5QrCode: null,
         scannerError: '',
         
+        // METHOD PENCARIAN TIKET VIA AJAX
+        async submitTracking() {
+            const ticketInput = document.querySelector('input[name=ticket_number]');
+            if (!ticketInput || !ticketInput.value.trim()) return;
+
+            this.isLoading = true;
+            this.errorMessage = '';
+
+            try {
+                const response = await fetch('{{ route('public.track.search') }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: JSON.stringify({
+                        ticket_number: ticketInput.value.trim()
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.status === 'success') {
+                    this.modalHtml = data.html;
+                    this.showResultModal = true;
+                } else {
+                    this.errorMessage = data.message || 'Nomor nota perbaikan tidak ditemukan.';
+                }
+            } catch (err) {
+                this.errorMessage = 'Terjadi kesalahan sistem. Coba beberapa saat lagi.';
+            } finally {
+                this.isLoading = false;
+            }
+        },
+
         startScanner() {
             this.showScanner = true;
             this.scannerError = '';
@@ -31,7 +71,7 @@
                         }
                         
                         this.stopScanner();
-                        document.querySelector('#tracking-form').submit();
+                        this.submitTracking(); // Langsung submit via AJAX setelah scan
                     },
                     (errorMessage) => {}
                 ).catch(err => {
@@ -89,17 +129,9 @@
                     </p>
                 </div>
 
-                <!-- NOTIFIKASI ERROR JIKA TIKET TIDAK DITEMUKAN -->
-                @if ($errors->has('ticket_number'))
-                    <div class="p-3 bg-rose-500/90 backdrop-blur-md border border-rose-200/50 text-white text-xs font-bold rounded-2xl shadow-lg max-w-lg mx-auto lg:mx-0 text-left flex items-center gap-2.5">
-                        <i class="fa-solid fa-triangle-exclamation text-base shrink-0"></i>
-                        <span>{{ $errors->first('ticket_number') }}</span>
-                    </div>
-                @endif
-
                 <!-- FORM INPUT TRACKING TIKET -->
                 <div class="bg-white/95 backdrop-blur-xl p-3 sm:p-4 rounded-2xl shadow-xl text-gray-800 max-w-lg mx-auto lg:mx-0 border border-white/60">
-                    <form id="tracking-form" action="{{ route('public.track.search') }}" method="POST" class="flex flex-col sm:flex-row gap-2">
+                    <form @submit.prevent="submitTracking()" id="tracking-form" class="flex flex-col sm:flex-row gap-2">
                         @csrf
                         <div class="relative flex-1 flex items-center">
                             <span class="absolute left-3.5 text-sky-500 pointer-events-none">
@@ -126,11 +158,29 @@
                             </button>
                         </div>
 
-                        <button type="submit" class="bg-gradient-to-r from-sky-500 via-blue-600 to-indigo-600 hover:from-sky-600 hover:to-indigo-700 text-white px-5 py-2.5 sm:py-3 rounded-xl font-black transition shadow-md hover:shadow-sky-500/30 flex items-center justify-center space-x-2 text-xs sm:text-sm whitespace-nowrap shrink-0 cursor-pointer active:scale-95">
-                            <i class="fa-solid fa-magnifying-glass text-xs"></i>
-                            <span>Cek Sekarang</span>
+                        <button type="submit" :disabled="isLoading" class="bg-gradient-to-r from-sky-500 via-blue-600 to-indigo-600 hover:from-sky-600 hover:to-indigo-700 text-white px-5 py-2.5 sm:py-3 rounded-xl font-black transition shadow-md hover:shadow-sky-500/30 flex items-center justify-center space-x-2 text-xs sm:text-sm whitespace-nowrap shrink-0 cursor-pointer active:scale-95 disabled:opacity-75">
+                            <template x-if="!isLoading">
+                                <span class="flex items-center gap-1.5">
+                                    <i class="fa-solid fa-magnifying-glass text-xs"></i>
+                                    <span>Cek Sekarang</span>
+                                </span>
+                            </template>
+                            <template x-if="isLoading">
+                                <span class="flex items-center gap-1.5">
+                                    <i class="fa-solid fa-spinner animate-spin text-xs"></i>
+                                    <span>Mencari...</span>
+                                </span>
+                            </template>
                         </button>
                     </form>
+
+                    <!-- NOTIFIKASI ERROR PENCARIAN (AJAX) -->
+                    <template x-if="errorMessage">
+                        <div class="mt-2.5 p-2.5 bg-rose-500/90 text-white text-xs font-bold rounded-xl shadow-md flex items-center gap-2 text-left">
+                            <i class="fa-solid fa-circle-exclamation text-sm shrink-0"></i>
+                            <span x-text="errorMessage"></span>
+                        </div>
+                    </template>
 
                     <!-- Peringatan Lupa Tiket -->
                     <div class="mt-2 text-center lg:text-left">
@@ -226,6 +276,34 @@
             <p class="text-[10px] text-slate-500 text-center mt-2.5">
                 Arahkan kamera HP ke QR Code pada nota perbaikan unit.
             </p>
+        </div>
+    </div>
+
+    <!-- ==================== POP-UP MODAL HASIL TRACKING ==================== -->
+    <div 
+        x-show="showResultModal" 
+        x-transition:enter="transition ease-out duration-300"
+        x-transition:enter-start="opacity-0 scale-95"
+        x-transition:enter-end="opacity-100 scale-100"
+        x-transition:leave="transition ease-in duration-200"
+        x-transition:leave-start="opacity-100 scale-100"
+        x-transition:leave-end="opacity-0 scale-95"
+        class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/80 backdrop-blur-md"
+        style="display: none;"
+    >
+        <div class="bg-white rounded-3xl max-w-lg w-full p-5 sm:p-6 shadow-2xl border border-slate-100 relative max-h-[90vh] overflow-y-auto">
+            
+            <!-- TOMBOL CLOSE POPUP -->
+            <button 
+                @click="showResultModal = false"
+                class="absolute top-4 right-4 w-8 h-8 bg-slate-100 hover:bg-slate-200 text-slate-500 rounded-full flex items-center justify-center transition cursor-pointer text-sm z-10"
+            >
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <!-- KONTEN POP-UP HASIL AJAX -->
+            <div x-html="modalHtml"></div>
+
         </div>
     </div>
 
