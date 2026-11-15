@@ -65,16 +65,18 @@
             <span :class="sidebarCollapsed ? 'inline md:hidden' : 'inline'" class="whitespace-nowrap transition-all duration-200">Tiket Servis</span>
         </a>
 
-        <!-- Sparepart & Stok Link -->
-        <a 
-            href="#" 
-            :class="sidebarCollapsed ? 'justify-start md:justify-center px-3 md:px-0' : 'px-3'" 
-            class="flex items-center space-x-3 py-2.5 rounded-xl text-sm font-medium hover:bg-slate-800 hover:text-white text-slate-400 transition-all duration-200 group" 
-            title="Sparepart & Stok"
-        >
-            <i class="fa-solid fa-boxes-stacked w-5 text-center group-hover:text-sky-400 shrink-0 text-base transition-colors"></i>
-            <span :class="sidebarCollapsed ? 'inline md:hidden' : 'inline'" class="whitespace-nowrap transition-all duration-200">Sparepart & Stok</span>
-        </a>
+        @if (in_array(auth()->user()->role ?? '', ['owner', 'admin']))
+            <!-- Sparepart & Stok Link -->
+            <a
+                href="{{ route('admin.products.index') }}"
+                :class="sidebarCollapsed ? 'justify-start md:justify-center px-3 md:px-0' : 'px-3'"
+                class="flex items-center space-x-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 group {{ request()->routeIs('admin.products.*') ? 'bg-sky-600 text-white shadow-md shadow-sky-600/20' : 'hover:bg-slate-800 hover:text-white text-slate-400' }}"
+                title="Sparepart & Stok"
+            >
+                <i class="fa-solid fa-boxes-stacked w-5 text-center shrink-0 text-base transition-colors {{ request()->routeIs('admin.products.*') ? 'text-white' : 'group-hover:text-sky-400' }}"></i>
+                <span :class="sidebarCollapsed ? 'inline md:hidden' : 'inline'" class="whitespace-nowrap transition-all duration-200">Sparepart & Stok</span>
+            </a>
+        @endif
 
         <!-- SECTION 2: KHUSUS OWNER (LAPORAN & MANAJEMEN AKUN) -->
         @if (auth()->user()->role === 'owner')
@@ -121,7 +123,7 @@
                 </p>
             </div>
 
-            <a 
+            <a
                 href="#" 
                 :class="sidebarCollapsed ? 'justify-start md:justify-center px-3 md:px-0' : 'px-3'" 
                 class="flex items-center space-x-3 py-2.5 rounded-xl text-sm font-medium hover:bg-slate-800 hover:text-white text-slate-400 transition-all duration-200 group" 

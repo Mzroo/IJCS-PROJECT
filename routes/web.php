@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\UserController;
@@ -85,7 +86,7 @@ Route::middleware(['auth', CheckRole::class . ':admin,owner,teknisi'])
         | Restricted Access: Admin & Owner Only (Kasir & Transaksi)
         |--------------------------------------------------------------------------
         */
-        Route::middleware(CheckRole::class . ':admin,owner')->group(function () {
+        Route::middleware(CheckRole::class.':admin,owner')->group(function () {
             Route::post('services/{service}/process-payment', [ServiceController::class, 'processPayment'])
                 ->name('services.process-payment');
         });
@@ -103,6 +104,12 @@ Route::middleware(['auth', CheckRole::class . ':admin,owner,teknisi'])
             // Modul Manajemen Staf & Users
             Route::patch('/users/{user}/toggle-status', [UserController::class, 'toggleStatus'])->name('admin.users.toggle-status');
             Route::resource('users', UserController::class, ['as' => 'admin']);
+        });
+
+        Route::middleware(CheckRole::class . ':admin,owner')->group(function () {
+            Route::patch('products/{product}/toggle-status', [ProductController::class, 'toggleStatus'])
+                ->name('admin.products.toggle-status');
+            Route::resource('products', ProductController::class, ['as' => 'admin'])->except('show');
         });
 
     });
