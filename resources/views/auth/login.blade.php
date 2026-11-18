@@ -216,7 +216,7 @@
                     <template x-if="!loading">
                         <div class="flex items-center gap-2">
                             <span>LOGIN KEDALAM SISTEM</span>
-                            <i class="fa-solid fa-arrow-right text-xs"></i>
+                            {{-- <i class="fa-solid fa-arrow-right text-xs"></i> --}}
                         </div>
                     </template>
                     <template x-if="loading">
